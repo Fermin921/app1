@@ -1,0 +1,70 @@
+
+Comando para ejecutar el proyecto en produccion: npm start 
+Comando para ejecutar el proyecto en desarrollo: npm run start:dev todo cambio que se haga se refrescara en la pagina
+Convertir todo el codido convertido para produccion: npm run build
+Vigila si existen reglas que se esten saltando, como variables sin usar: npm run lint
+
+app.controller.spec.ts es un archivo para el testing
+app.controller mantiene la logica del modulo principal
+app.module une a todos los demas archivos
+main.ts es el archivo principal que manda llamar los modulos para mostrarlos.
+
+Comando para crear un nuevo modulo: nest generate module "nombre del modulo"
+Tambien se puede "nest g mo nombre del modulo"
+
+Controllers:
+Son funciones que se llaman cuando se consulta una ruta
+
+Creando un archivo controller.ts:
+import { Controller, Get} from "@nestjs/common";
+
+@Controller({})
+export class TaskController {
+    @Get("/task") //Asi se crea una nueva ruta
+    getAllTask() { //Funcion que ejecuta cuando se llama la ruta
+        return 'Apoco si tilin'
+    }
+}
+
+Si se realiza de manera manual, debemos importarlo dentro del app.module en el apartado de controllers
+Tambien se puede realizar con comando: nest generate controller "Nombre_Controllador"
+Mas simplicado se puede realizar con comando: nest g co "Nombre_Controlador"
+
+Ademas del controlador se crea con su archivo de testing, para no crearlo podemos evitarlo con el comando: nest g co "Nombre_controlador" --no-spec 
+
+Services: 
+Es cuando se da el caso, de reutilizar codigo para utilizar en varias partes de la aplicacion 
+
+Utiliza el decorador @injectable, indica que podemos injectar codigo dentro de cualquier parte de la aplicacion 
+Para crear un archivo de servicios: nest g service "nombre_servicio"
+Otra manera sin el archivo de spec: nest g s "nombre_servicio" --no-spec 
+
+Tomar en cuenta que para el service sea reconocido debemos importarlo dentro de module, en caso de hacer manual, utilizando "providers" y agregar el servicio 
+@Module({
+    providers: [TaskService]
+})
+
+De esta manera definimos el service para poder utilizarlo en otras partes:
+@Injectable()
+export class TaskService {
+    getTask(){
+        return ['task', 'task2', 'task3']
+    }
+}
+
+Para utilizar el servide dentro del controlador:
+    //Para poder utilizar la funcion del service
+    // taskService: TaskService
+    // constructor(taskService: TaskService){
+    //     this.taskService = taskService;
+    // }
+
+    //Otra manera de realizar para utilizar la funcion del service mas simplificada
+    constructor(private taskService:TaskService){}
+
+    @Get('/task')
+    getAllTasks(){
+        return this.taskService.getTask(); //regresa la funcion que recibimos del service
+    }
+
+
