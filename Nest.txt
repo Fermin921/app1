@@ -126,3 +126,40 @@ y para las peticiones se crearian del tipo dto, por ejemplo:
     createTask(@Body() task:create_task_dto){
         return this.taskService.createTask(task); 
     }
+
+Validaciones: 
+Hay bibliotecas que por defecto recomienda nest para poder hacer validaciones y mezclarlas con los Dtos 
+
+
+import { IsString } from "class-validator"
+export class CreateTaskDto{
+
+    @IsString()
+    title: string
+
+    @IsString()
+    descripcion: string
+}
+De esta manera hacemos usar la libreria y usando los decoradores para poder realizar las validaciones correspondientes
+Pero para que las haga debemos de mandarlas llamar al controller que ejecuta toda la logica
+
+De esta manera ya estariamos validando los datos del dto, cada que se ejecute la funcion de la ruta llamada
+  @Post()
+    @UsePipes(new ValidationPipe())
+    createTask(@Body() task:any){
+        return this.taskService.createTask(task); 
+    }
+
+Para no añadir cada pide en cada controller, se puede hacer de manera global para que todos se usen siempre y cuando se tengan Dtose
+
+En el main.ts:
+Agregar app.useGlobalPipes(new ValidationPipe())
+
+y agregango whithelist:true, eliminara los campos extras que se manden y no se tengan dentro de los dtos o  que no sean esperados
+
+Para personalizar los estatus de las peticiones, se hace usando el decorador de @HttpCode('')
+
+Pipes:
+Es una funcion que procesa algo y lo retorna ya modificado o alterado.
+
+

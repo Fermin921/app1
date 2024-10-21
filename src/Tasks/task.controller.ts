@@ -1,4 +1,4 @@
-import { Controller, Get, Req, Res,Post, Body, Query, Param} from "@nestjs/common";
+import { Controller,UsePipes ,Get, Req, Res,Post, Body, Query, Param, ValidationPipe} from "@nestjs/common";
 import { TaskService } from "./task.service";
 import { Request,Response } from "express";
 @Controller({})
@@ -32,6 +32,7 @@ export class TaskController {
 
     //Manera de implementar el decorador post y ademas el preparar para recibir informacion atraves del body de la peticion
     @Post()
+    @UsePipes(new ValidationPipe())
     createTask(@Body() task:any){
         return this.taskService.createTask(task); 
     }
